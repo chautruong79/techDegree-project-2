@@ -4,7 +4,7 @@ const studentArr = Array.from(document.querySelectorAll('.student-item'));
 //To hide all of the items in the list except for the ten needed to show.
 const showPage = ( list, page ) => {
   list.forEach((item, i) => {
-     if (!(i>=(page-1)*10 && i <= (page -1)*10 + 9))
+    if (!(i>=(page-1)*10 && i <= (page -1)*10 + 9))
          item.style.display = 'none';
     else
         item.style.display = 'block';
