@@ -1,5 +1,6 @@
 //List of students as an array
 const studentArr = Array.from(document.querySelectorAll('.student-item'));
+const studentNameArr = Array.from(document.querySelectorAll('h3')).map(student => student.textContent);
 
 //To hide all of the items in the list except for the ten needed to show.
 const showPage = ( list, page ) => {
@@ -46,10 +47,63 @@ const clickEvent = (list) => {
 };
 
 //To generate, append, and add functionality to the pagination buttons.
-const appendPageLinks = ( list ) => {
+const appendPageLinks = (list ) => {
     createDiv(list);
     clickEvent(list);
 };
 
+//Add search component dynamically 
+const searchComponent = () => {
+    let newDiv = document.createElement('div');
+    let newInput = document.createElement('input');
+    let newButton = document.createElement('button');
+    newDiv.className = 'student-search';
+    newInput.setAttribute('placeholder','Search for students...');
+    newInput.setAttribute('id','input');
+    newButton.setAttribute('id','btn');
+    newButton.textContent = 'Search';
+    newDiv.appendChild(newInput);
+    newDiv.appendChild(newButton);
+    document.querySelector('h2').insertAdjacentElement("afterend", newDiv);
+}
+
+//Store the search results in an array 
+const search = (text) => {
+    let newArr = [];
+    studentArr.forEach ((item)=> {
+        let name = item.childNodes[1].childNodes[3].textContent;
+        if (name.toLowerCase().includes(text.toLowerCase())) 
+            newArr.push(item);
+    });
+    return newArr;
+};
+
 showPage(studentArr,1);
+searchComponent();
 appendPageLinks(studentArr);
+
+const button = document.querySelector('#btn');
+
+//Generate search list
+const outPutSearch = () => {
+    const input = document.querySelector('#input');
+    let newArr = search(input.value);
+    let page = document.querySelector('.page');
+    studentArr.forEach((item, i) => { item.style.display = 'none'});
+    page.removeChild(page.lastElementChild);
+    showPage(newArr,1);
+    appendPageLinks(newArr);
+}
+
+//Add eventListener to search button
+button.addEventListener('click', () => {
+    if (input.value.length >0) {
+        outPutSearch();
+        input.value = '';
+    }
+});
+
+//Add a keyup event listener to the search input so that the list filters in real time as the user types
+document.addEventListener('keyup', (event) => {
+        outPutSearch();
+});
